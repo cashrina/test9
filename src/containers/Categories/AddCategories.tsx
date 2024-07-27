@@ -1,10 +1,10 @@
 import {ChangeEvent, FormEvent, useEffect, useState} from "react";
-import {CategoryMutation} from "../../../types.ts";
+import {CategoryMutation} from "../../types.ts";
 import {useNavigate, useParams} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
+import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {toast} from "react-toastify";
-import {createCategory, fetchOneCategory, updateCategory} from "../../../store/Categori/categoriesThunks.ts";
-import {selectCategory} from "../../../store/Categori/categoriesSlice.ts";
+import {createCategory, fetchOneCategory, updateCategory} from "../../store/Category/categoriesThunks.ts";
+import {selectCategory} from "../../store/Category/categoriesSlice.ts";
 
 const AddCategories = () => {
     const navigate = useNavigate();

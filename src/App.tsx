@@ -3,7 +3,7 @@ import Transactions from "./containers/Transaction/Transactions.tsx";
 import Categories from "./containers/Categories/Categories.tsx";
 import {Route, Routes} from "react-router-dom";
 import TransactionForm from "./components/TransactionForm/TransactionForm.tsx";
-import AddCategories from "./containers/Categories/AddCategories/AddCategories.tsx";
+import AddCategories from "./containers/Categories/AddCategories.tsx";
 
 function App() {
 

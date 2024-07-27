@@ -1,8 +1,8 @@
 import {NavLink} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
-import {selectCategory, selectFetchCategories} from "../../store/Categori/categoriesSlice.ts";
+import {selectCategory, selectFetchCategories} from "../../store/Category/categoriesSlice.ts";
 import {useEffect} from "react";
-import {deleteCategory, fetchCategory} from "../../store/Categori/categoriesThunks.ts";
+import {deleteCategory, fetchCategory} from "../../store/Category/categoriesThunks.ts";
 import Spinner from "../../components/Spinner/Spinner.tsx";
 
 const Categories = () => {
@@ -18,8 +18,6 @@ const Categories = () => {
         await dispatch(deleteCategory(id));
         await dispatch(fetchCategory());
     };
-
-    console.log(categories);
 
     return isFetching ? (
         <Spinner />
