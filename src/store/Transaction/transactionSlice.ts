@@ -1,11 +1,21 @@
 import {ApiTransaction, TransactionId} from "../../types.ts";
 import {createSlice} from "@reduxjs/toolkit";
-import {createTransaction, fetchTransaction} from "./transactionThunks.ts";
+import {
+    createTransaction,
+    deleteTransaction,
+    fetchOneTransaction,
+    fetchTransaction,
+    updateTransaction
+} from "./transactionThunks.ts";
+import {toast} from "react-toastify";
 
 export interface TransactionState {
     items: TransactionId[];
     isCreating: boolean;
     isFetching: boolean;
+    isUpdating: boolean;
+    isDeleting: false | string;
+    isOneFetching: boolean;
     oneTransaction: null | ApiTransaction;
 }
 
@@ -13,6 +23,9 @@ export const initialState: TransactionState = {
     items: [],
     isCreating: false,
     isFetching: false,
+    isUpdating: false,
+    isDeleting: false,
+    isOneFetching: false,
     oneTransaction: null,
 }
 
@@ -37,12 +50,48 @@ export const transactionSlice = createSlice({
         }). addCase(fetchTransaction.rejected, (state) => {
             state.isFetching = false;
         });
+
+        builder
+            .addCase(updateTransaction.pending, (state) => {
+                state.isUpdating = true;
+            })
+            .addCase(updateTransaction.fulfilled, (state) => {
+                state.isUpdating = false;
+            })
+            .addCase(updateTransaction.rejected, (state) => {
+                state.isUpdating = false;
+            });
+
+        builder.addCase(deleteTransaction.pending, (state, { meta : {arg : transactionId}  }) => {
+            state.isDeleting = transactionId;
+        }).addCase(deleteTransaction.fulfilled, (state) => {
+            state.isDeleting = false;
+            toast.success('Transaction was deleted!');
+        }).addCase(deleteTransaction.rejected, (state) => {
+            state.isDeleting = false;
+        });
+
+        builder
+            .addCase(fetchOneTransaction.pending, (state) => {
+                state.oneTransaction = null;
+                state.isOneFetching = true;
+            })
+            .addCase(fetchOneTransaction.fulfilled, (state, { payload: apiTransaction }) => {
+                state.oneTransaction = apiTransaction;
+                state.isOneFetching = false;
+            })
+            .addCase(fetchOneTransaction.rejected, (state) => {
+                state.isOneFetching = false;
+            });
     },
 
     selectors: {
         selectTransaction: (state) => state.items,
         selectPostTransaction: (state) => state.isCreating,
         selectFetchTransaction: (state) => state.isFetching,
+        selectUpdateTransaction: (state) => state.isUpdating,
+        selectDeleteTransaction: (state) => state.isDeleting,
+        selectFetchOneTransaction: (state) => state.isOneFetching,
     },
 });
 
@@ -51,5 +100,8 @@ export const transactionReducer = transactionSlice.reducer;
 export const {
     selectTransaction,
     selectPostTransaction,
-    selectFetchTransaction
+    selectFetchTransaction,
+    selectUpdateTransaction,
+    selectDeleteTransaction,
+    selectFetchOneTransaction
 } = transactionSlice.selectors;

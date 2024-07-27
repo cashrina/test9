@@ -24,13 +24,13 @@ export const updateCategory = createAsyncThunk<void, UpdateCategoryArg, {state: 
 export const fetchOneCategory = createAsyncThunk<ApiCategory, string, {state: RootState}>(
     'categories/fetchOneCategory',
     async (id) => {
-        const { data: dish } = await axiosApi.get<ApiCategory | null>(
+        const { data: category } = await axiosApi.get<ApiCategory | null>(
             `/categories/${id}.json`,
         );
-        if (dish === null) {
+        if (category === null) {
             throw new Error('Not found');
         }
-        return dish;
+        return category;
     },
 );
 
