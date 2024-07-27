@@ -1,12 +1,17 @@
-import {useAppSelector} from "../../app/hooks.ts";
+import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {selectCategory} from "../../store/Category/categoriesSlice.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {toast} from "react-toastify";
+import {Transaction} from "../../types.ts";
+import {createTransaction} from "../../store/Transaction/transactionThunks.ts";
+import {useNavigate} from "react-router-dom";
 
 
 const TransactionForm = () => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const categoriesName = useAppSelector(selectCategory);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<Transaction>({
         category: '',
         amount: 0,
         createdAt: new Date().toISOString().split('T')[0],
@@ -24,7 +29,8 @@ const TransactionForm = () => {
     };
 
     const onTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        setSelectedType(event.target.value);
+        const newType = event.target.value;
+        setSelectedType(newType);
         setFormData(prev => ({
             ...prev,
             category: '',
@@ -38,8 +44,10 @@ const TransactionForm = () => {
                 ...formData,
                 createdAt: new Date().toISOString().split('T')[0],
             };
+            await dispatch(createTransaction(dataToSubmit)).unwrap();
             console.log('Form data:', dataToSubmit);
             toast.success("Form submitted successfully!");
+            navigate('/');
         } catch (e) {
             console.error('Error:', e);
             toast.error('Could not submit the form');
@@ -101,7 +109,7 @@ const TransactionForm = () => {
                                 value={formData.amount}
                                 placeholder="Enter amount"
                                 min="0"
-                                step="1"
+                                step="10"
                             />
                         </div>
                         <button type="submit" className="btn btn-primary w-100">
