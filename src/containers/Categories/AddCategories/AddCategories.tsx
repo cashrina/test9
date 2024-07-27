@@ -36,22 +36,25 @@ const AddCategories = () => {
         }
     }, [id, selectCategories, dispatch]);
 
+
     const onFormSubmit = async (event: FormEvent) => {
         event.preventDefault();
         try {
             const body = {
                 ...categories,
-            }
+            };
+
             if (id !== undefined) {
-                await dispatch(updateCategory({id, apiCategory: body}));
-                toast.success("Pizza successfully updated!");
+                await dispatch(updateCategory({ id, apiCategory: body }));
+                toast.success("Category successfully updated!");
             } else {
-                await dispatch(createCategory({ ...categories })).unwrap();
-                toast.success("Pizza successfully created!");
+                await dispatch(createCategory({...categories})).unwrap();
+                toast.success("Category successfully created!");
             }
             navigate("/categories");
         } catch (e) {
-            toast.error('Could not save Pizza');
+            console.error('Error:', e);
+            toast.error('Could not save category');
         }
     };
 
@@ -68,17 +71,19 @@ const AddCategories = () => {
         <div className="container mt-5">
             <div className="row justify-content-center">
                 <div className="col-md-6">
-                    <h2 className="text-center mb-4" onSubmit={onFormSubmit}>Create Transaction</h2>
+                    <h2 className="text-center mb-4">{id ? 'Edit Category' : 'Create Category'}</h2>
                     <form onSubmit={onFormSubmit}>
                         <div className="mb-3">
-                            <label htmlFor="formType" className="form-label">Transaction Type</label>
+                            <label htmlFor="formType" className="form-label">Category Type</label>
                             <select
                                 id="formType"
                                 className="form-select"
                                 name="type"
                                 onChange={onFieldChange}
                                 value={categories.type}
+                                disabled={!!id}
                             >
+                                <option value="" disabled className="text-muted">Chose</option>
                                 <option value="income">Income</option>
                                 <option value="expense">Expense</option>
                             </select>
@@ -87,6 +92,7 @@ const AddCategories = () => {
                         <div className="mb-3">
                             <label htmlFor="formName" className="form-label">Name</label>
                             <input
+                                required
                                 type="text"
                                 id="formName"
                                 className="form-control"
@@ -95,7 +101,10 @@ const AddCategories = () => {
                                 value={categories.name}
                             />
                         </div>
-                        <button type="submit" className="btn btn-primary w-100">Create</button>
+
+                        <button type="submit" className="btn btn-primary w-100">
+                            {id ? 'Update' : 'Create'}
+                        </button>
                     </form>
                 </div>
             </div>

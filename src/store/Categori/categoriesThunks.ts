@@ -17,24 +17,21 @@ export const createCategory = createAsyncThunk<void, CategoryMutation, {state: R
 export const updateCategory = createAsyncThunk<void, UpdateCategoryArg, {state: RootState}> (
     'categories/updateCategory',
     async ({id, apiCategory}) => {
-        await axiosApi.put(`/pizzas/${id}.json`, apiCategory);
+        await axiosApi.put(`/categories/${id}.json`, apiCategory);
     },
 );
 
-export const fetchOneCategory = createAsyncThunk<ApiCategory, string, { state: RootState }>(
+export const fetchOneCategory = createAsyncThunk<ApiCategory, string, {state: RootState}>(
     'categories/fetchOneCategory',
     async (id) => {
-        try {
-            const { data: pizza } = await axiosApi.get<ApiCategory>(`/categories/${id}.json`);
-            if (!pizza) {
-                throw new Error('Category not found');
-            }
-            return pizza;
-        } catch (error) {
-            console.error("Category to fetch:", error);
-            throw error;
+        const { data: dish } = await axiosApi.get<ApiCategory | null>(
+            `/categories/${id}.json`,
+        );
+        if (dish === null) {
+            throw new Error('Not found');
         }
-    }
+        return dish;
+    },
 );
 
 export const fetchCategory = createAsyncThunk<CategoryId[], void, { state: RootState }>(

@@ -16,6 +16,7 @@ function App() {
                     <Route path="/categories" element={<Categories/>}/>
                     <Route path="/add-categories" element={<AddCategories />}/>
                     <Route path="/new-transaction" element={<TransactionForm />}/>
+                    <Route path="/edit/:id" element={<AddCategories />}/>
                     <Route path="*" element={<h1>Not Found</h1>}/>
                 </Routes>
             </div>

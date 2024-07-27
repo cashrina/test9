@@ -43,13 +43,13 @@ export const categoriesSlice = createSlice({
 
         builder
             .addCase(updateCategory.pending, (state) => {
-                state.createLoading = true;
+                state.isUpdating = true;
             })
             .addCase(updateCategory.fulfilled, (state) => {
-                state.createLoading = false;
+                state.isUpdating = false;
             })
             .addCase(updateCategory.rejected, (state) => {
-                state.createLoading = false;
+                state.isUpdating = false;
             });
 
         builder
